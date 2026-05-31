@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FarmacoVig</title>
+<style>
+:root{--navy:#0D2B4E;--teal:#028090;--sea:#02C39A;--bg:#f0f4f8;--card:#fff;--border:#dde3ec;--txt:#1a2535;--txt2:#5a6880;--txt3:#98a4b8;--danger:#c0392b;--warn:#e67e22;--ok:#27ae60;--info:#2980b9;--r:10px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--txt);font-size:13px}
+.header{background:var(--navy);padding:10px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.logo{width:30px;height:30px;background:var(--sea);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--navy);font-size:12px}
+.htitle{color:#fff;font-size:14px;font-weight:700}
+.hsub{color:rgba(255,255,255,.5);font-size:10px}
+.hright{margin-left:auto;display:flex;gap:6px}
+.hbtn{padding:5px 12px;border-radius:16px;border:none;cursor:pointer;font-size:11px;font-weight:600;font-family:inherit}
+.hbtn-sea{background:var(--sea);color:var(--navy)}
+.hbtn-ol{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4)}
+.layout{display:grid;grid-template-columns:220px 1fr;height:calc(100vh - 50px)}
+.sidebar{background:var(--navy);padding:12px;display:flex;flex-direction:column;gap:8px;overflow-y:auto}
+.sb-search{width:100%;padding:8px 10px;border-radius:7px;border:none;background:rgba(255,255,255,.1);color:#fff;font-size:12px;outline:none}
+.sb-search::placeholder{color:rgba(255,255,255,.35)}
+.sb-sec{font-size:10px;font-weight:600;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+.pc{background:rgba(255,255,255,.07);border-radius:7px;padding:9px 11px;cursor:pointer;transition:all .2s;border:1.5px solid transparent}
+.pc:hover{background:rgba(255,255,255,.12)}
+.pc.active{background:rgba(2,195,154,.15);border-color:var(--sea)}
+.pn{font-size:12px;font-weight:600;color:#fff}
+.pm{font-size:10px;color:rgba(255,255,255,.45);margin-top:1px}
+.pbadges{display:flex;gap:3px;flex-wrap:wrap;margin-top:5px}
+.bdg{font-size:9px;padding:2px 6px;border-radius:8px;font-weight:600}
+.bt{background:rgba(2,195,154,.2);color:var(--sea)}
+.bw{background:rgba(230,126,34,.2);color:#f39c12}
+.bd{background:rgba(192,57,43,.2);color:#e74c3c}
+.bi{background:rgba(41,128,185,.2);color:#5dade2}
+.nopats{color:rgba(255,255,255,.35);font-size:12px;text-align:center;padding:16px 0}
+.mc{padding:14px;overflow-y:auto;height:100%}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:70%;gap:10px;color:var(--txt3)}
+.empty-t{font-size:16px;font-weight:600;color:var(--txt2)}
+.ph{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px 16px;margin-bottom:10px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.ph h2{font-size:15px;font-weight:700;color:var(--navy)}
+.ph-det{display:flex;gap:8px;flex-wrap:wrap;margin-top:3px}
+.pd{font-size:11px;color:var(--txt2)}
+.ph-act{display:flex;gap:5px;flex-wrap:wrap}
+.tabs{display:flex;background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:10px;flex-wrap:wrap}
+.tab{flex:1;min-width:80px;padding:8px 4px;text-align:center;font-size:10px;font-weight:600;cursor:pointer;border-right:1px solid var(--border);transition:all .2s;color:var(--txt2)}
+.tab:last-child{border-right:none}
+.tab.active{background:var(--navy);color:#fff}
+.tab-content{display:none}.tab-content.active{display:block}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px}
+.ct{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{font-size:10px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.3px}
+.fg input,.fg select,.fg textarea{border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;font-family:inherit;color:var(--txt);background:var(--bg);outline:none;width:100%;transition:border .2s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--teal);background:#fff}
+.fg textarea{resize:vertical;min-height:60px}
+.fg input[type="date"]{border:2px solid var(--teal);background:#f0fdfb;font-weight:600}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.full{grid-column:1/-1}
+.btn{padding:7px 14px;border-radius:7px;border:none;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+.btn-p{background:var(--teal);color:#fff}.btn-p:hover{background:#026d7a}
+.btn-n{background:var(--navy);color:#fff}
+.btn-d{background:var(--danger);color:#fff}
+.btn-o{background:#fff;color:var(--teal);border:1.5px solid var(--teal)}
+.btn-w{background:var(--warn);color:#fff}
+.btn-sm{padding:4px 9px;font-size:11px}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-bottom:10px}
+.sb{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:10px;text-align:center}
+.sn{font-size:22px;font-weight:700;color:var(--navy)}
+.sl{font-size:10px;color:var(--txt3);margin-top:2px}
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl th{background:#f8fafc;color:var(--txt2);font-weight:600;text-align:left;padding:6px 8px;border-bottom:2px solid var(--border);font-size:10px;text-transform:uppercase}
+.tbl td{padding:6px 8px;border-bottom:1px solid #f0f2f5;vertical-align:top}
+.tbl tr:hover td{background:#fafbfc}
+.lab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:7px}
+.li{background:#f8fafc;border-radius:7px;padding:7px 9px;border-left:3px solid var(--border)}
+.li.critical{border-left-color:var(--danger);background:#fff5f5}
+.li.normal{border-left-color:var(--ok)}
+.ln{font-size:10px;font-weight:600;color:var(--txt2);text-transform:uppercase}
+.lv{font-size:15px;font-weight:700;color:var(--txt);margin-top:1px}
+.lv.critical{color:var(--danger)}
+.lf{font-size:9px;font-weight:700;padding:2px 5px;border-radius:3px;display:inline-block;margin-top:2px}
+.lf-c{background:#fde8e8;color:var(--danger)}
+.albox{border-radius:7px;padding:9px 12px;margin-bottom:8px;display:flex;gap:8px;align-items:flex-start}
+.al-d{background:#fff0f0;border:1px solid #fcc}
+.al-w{background:#fff8e8;border:1px solid #fde08c}
+.al-t{font-size:12px;font-weight:700}
+.al-d .al-t{color:var(--danger)}.al-w .al-t{color:#c17f00}
+.al-tx{font-size:11px;color:var(--txt2);margin-top:2px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:none;align-items:flex-start;justify-content:center;padding:12px;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:12px;max-width:680px;width:100%;margin:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.mh{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;border-radius:12px 12px 0 0;z-index:10}
+.mh h3{font-size:13px;font-weight:700;color:var(--navy)}
+.mc2{padding:14px 18px}
+.mf{padding:10px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:6px;position:sticky;bottom:0;background:#fff;border-radius:0 0 12px 12px}
+.fz{border:2px dashed var(--border);border-radius:9px;padding:20px;text-align:center;cursor:pointer;transition:all .25s;position:relative;background:#fafbfc}
+.fz input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.fp{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.fthumb{width:65px;height:65px;object-fit:cover;border-radius:6px;border:1px solid var(--border)}
+.spin{width:26px;height:26px;border:3px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;bottom:16px;right:16px;background:var(--navy);color:#fff;padding:8px 16px;border-radius:7px;font-size:12px;font-weight:500;z-index:9999;transform:translateY(50px);opacity:0;transition:all .3s;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.toast.show{transform:translateY(0);opacity:1}
+hr.sec{border:none;border-top:1px solid var(--border);margin:10px 0}
+.sec-t{font-size:11px;font-weight:700;color:var(--navy);margin:10px 0 6px}
+.hint-date{background:#e8f7f0;border:1px solid #a8dfc4;border-radius:7px;padding:7px 12px;margin-bottom:10px;font-size:11px;color:#1a5c38}
+
+/* ── LÍNEA DE TIEMPO ── */
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:2px;background:var(--border)}
+.tl-date-header{margin-bottom:4px;margin-top:14px}
+.tl-date-header:first-child{margin-top:0}
+.tl-date-label{display:inline-block;background:var(--navy);color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;position:relative}
+.tl-date-label::before{content:'';position:absolute;left:-20px;top:50%;transform:translateY(-50%);width:9px;height:9px;border-radius:50%;background:var(--navy);border:2px solid #fff;box-shadow:0 0 0 2px var(--navy)}
+.tl-item{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:9px 11px;margin-bottom:5px;transition:box-shadow .2s}
+.tl-item:hover{box-shadow:0 2px 10px rgba(0,0,0,.07)}
+.tl-item.seg{border-left:4px solid var(--teal)}
+.tl-item.lab{border-left:4px solid var(--info)}
+.tl-item.cul{border-left:4px solid var(--warn)}
+.tl-item.cul.pos{border-left-color:var(--danger)}
+.tl-header{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap}
+.tl-tipo{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.tl-tipo.seg{color:var(--teal)}.tl-tipo.lab{color:var(--info)}.tl-tipo.cul{color:var(--warn)}.tl-tipo.cul.pos{color:var(--danger)}
+.tl-body{margin-top:5px;font-size:11px;color:var(--txt2);line-height:1.5}
+.tl-actions{display:flex;gap:4px;margin-top:6px}
+.tl-badge{display:inline-block;font-size:9px;padding:2px 6px;border-radius:6px;font-weight:600;margin-right:3px}
+.tl-badge.ram{background:#fff0e0;color:#c17f00}
+.tl-badge.prm{background:#e8f0fb;color:var(--info)}
+.tl-badge.int{background:#e8faf3;color:var(--ok)}
+.tl-badge.crit{background:#fde8e8;color:var(--danger)}
+.tl-expand{font-size:10px;color:var(--teal);cursor:pointer;text-decoration:underline;margin-top:3px;display:inline-block}
+.tl-detail{display:none;margin-top:7px;border-top:1px solid var(--border);padding-top:7px}
+.tl-detail.open{display:block}
+.tl-lab-mini{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.tl-lab-chip{font-size:10px;padding:2px 6px;border-radius:5px;background:#f0f4f8;border:1px solid var(--border)}
+.tl-lab-chip.crit{background:#fde8e8;border-color:#f5b8b8;color:var(--danger);font-weight:700}
+
+/* ── TABLAS CRONOLÓGICAS (Kardex / Labs timeline / Cultivos timeline) ── */
+.ct-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:8px;border:1px solid var(--border)}
+.ct-tbl{border-collapse:collapse;font-size:11px;width:100%}
+.ct-tbl th{background:var(--navy);color:#fff;padding:5px 6px;text-align:center;white-space:nowrap;font-size:10px;border:1px solid rgba(255,255,255,.12);position:sticky;top:0}
+.ct-tbl th.row-h{text-align:left;min-width:150px;background:#1a3a5c;position:sticky;left:0;z-index:2}
+.ct-tbl td{padding:4px 5px;border:1px solid var(--border);vertical-align:middle;text-align:center;min-width:30px}
+.ct-tbl td.row-cell{text-align:left;background:#f8fafc;font-weight:600;white-space:nowrap;padding:5px 9px;position:sticky;left:0;z-index:1;max-width:180px}
+.ct-tbl td.row-cell .sub{font-size:9px;color:var(--txt3);font-weight:400;display:block;white-space:normal}
+.ct-tbl tr:hover td{background:#f5f8ff}
+.ct-tbl tr:hover td.row-cell{background:#eef3fb}
+.ct-tbl td.today-col{background:#e8f7f0!important}
+.ct-tbl td.weekend-col{background:#fafafa}
+.ct-tbl thead tr:first-child th{background:var(--navy)}
+.ct-tbl .group-row td{background:var(--navy)!important;color:#fff!important;font-size:10px;font-weight:700;text-align:left!important;padding:4px 9px!important;text-transform:uppercase;letter-spacing:.5px;border-color:rgba(255,255,255,.1)!important}
+/* Celdas con valor */
+.cv-ok{background:#e8f8f0!important;color:var(--ok);font-weight:700;font-size:10px}
+.cv-crit{background:#fde8e8!important;color:var(--danger);font-weight:700;font-size:10px}
+.cv-pend{background:#fff8e8!important;color:#c17f00;font-size:10px}
+.cv-pos{background:#fde8e8!important;color:var(--danger);font-weight:700;font-size:10px}
+.cv-neg{background:#e8f8f0!important;color:var(--ok);font-size:10px}
+.cv-med{background:#e8f0fb!important;color:var(--navy);font-size:10px}
+/* check turno */
+.ck-cell{cursor:pointer;font-size:13px;line-height:1}
+.ck-cell:hover{transform:scale(1.4);display:inline-block}
+/* Controles */
+.ctl-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.ctl-sel{padding:5px 9px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:inherit;background:#fff;color:var(--txt)}
+.add-row-bar{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.add-row-bar input{flex:1;min-width:120px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:inherit;background:#fff}
+.kdx-legend{display:flex;gap:10px;flex-wrap:wrap;font-size:10px;color:var(--txt3);margin-top:8px}
+.kdx-legend span{display:flex;align-items:center;gap:3px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">FV</div>
+  <div><div class="htitle">FarmacoVig</div><div class="hsub">Seguimiento Farmacoterapéutico</div></div>
+  <div class="hright">
+    <button class="hbtn hbtn-sea" onclick="abrirNuevoPac()">+ Paciente</button>
+    <button class="hbtn hbtn-ol" onclick="exportCSV()">⬇ CSV</button>
+  </div>
+</div>
+
+<div class="layout">
+<div class="sidebar">
+  <input class="sb-search" placeholder="🔍 Buscar paciente..." oninput="filtrar(this.value)">
+  <div class="sb-sec">Pacientes</div>
+  <div id="patList"><div class="nopats">Sin pacientes</div></div>
+</div>
+<div class="mc" id="mainContent">
+  <div class="empty">
+    <div style="font-size:38px">🏥</div>
+    <div class="empty-t">FarmacoVig</div>
+    <div style="font-size:12px;color:var(--txt3);text-align:center;max-width:240px">Selecciona un paciente o crea uno nuevo</div>
+    <br><button class="btn btn-p" onclick="abrirNuevoPac()">+ Registrar paciente</button>
+  </div>
+</div>
+</div>
+
+<!-- MODALES DE FORMULARIOS (Paciente, Seguimiento, Labs, Cultivo, Foto) -->
+<!-- MODAL PACIENTE -->
+<div class="modal-overlay" id="mPac"><div class="modal">
+  <div class="mh"><h3 id="mPacT">Nuevo Paciente</h3><button style="background:none;border:none;font-size:20px;cursor:pointer" onclick="cerrar('mPac')">✕</button></div>
+  <div class="mc2"><div class="g2">
+    <div class="fg"><label>Nombre *</label><input id="pN"></div>
+    <div class="fg"><label>HC</label><input id="pH" placeholder="N° HC"></div>
+    <div class="fg"><label>Edad</label><input id="pE"></div>
+    <div class="fg"><label>Sexo</label><select id="pS"><option value="">--</option><option>Masculino</option><option>Femenino</option></select></div>
+    <div class="fg"><label>Peso (kg)</label><input id="pPe"></div>
+    <div class="fg"><label>Talla (cm)</label><input id="pT"></div>
+    <div class="fg"><label>Servicio</label><input id="pSv" placeholder="UCI, Medicina..."></div>
+    <div class="fg"><label>Cama</label><input id="pC"></div>
+    <div class="fg"><label>Grupo</label>
+      <select id="pG"><option value="">--</option><option>Antifímicos (TBC)</option><option>Colistina</option><option>Aminoglucósidos</option><option>Vancomicina</option><option>Anticoagulación</option><option>Quimioterapia</option><option>Interconsulta</option><option>Otro</option></select>
+    </div>
+    <div class="fg"><label>Fecha ingreso</label><input id="pFi" type="date"></div>
+    <div class="fg full"><label>Diagnósticos</label><textarea id="pD"></textarea></div>
+    <div class="fg full"><label>Tratamiento / Kardex</label><textarea id="pTr"></textarea></div>
+    <div class="fg full"><label>Observaciones</label><textarea id="pO"></textarea></div>
+  </div></div>
+  <div class="mf"><button class="btn btn-o" onclick="cerrar('mPac')">Cancelar</button><button class="btn btn-p" onclick="guardarPac()">Guardar</button></div>
+</div></div>
+
+<!-- MODAL SEGUIMIENTO -->
+<div class="modal-overlay" id="mSeg"><div class="modal">
+  <div class="mh"><h3 id="mSegT">Nuevo Seguimiento</h3><button style="background:none;border:none;font-size:20px;cursor:pointer" onclick="cerrar('mSeg')">✕</button></div>
+  <div class="mc2">
+    <div class="hint-date">📅 Ingresa la fecha real del seguimiento (puede ser de días anteriores)</div>
+    <div class="g2">
+      <div class="fg"><label>📅 Fecha *</label><input id="sF" type="date"></div>
+      <div class="fg"><label>Turno</label><select id="sTu"><option>Mañana</option><option>Tarde</option><option>Noche</option><option>Todo el día</option></select></div>
+      <div class="fg full"><label>Evolución / Nota clínica</label><textarea id="sEv"></textarea></div>
+      <div class="fg full"><label>Tratamiento activo del día</label><textarea id="sTr" placeholder="Medicamento — dosis — vía — frecuencia (uno por línea)"></textarea></div>
+    </div>
+    <hr class="sec"><div class="sec-t">SIGNOS VITALES</div>
+    <div class="g3">
+      <div class="fg"><label>PA</label><input id="sPA" placeholder="120/80"></div>
+      <div class="fg"><label>FC</label><input id="sFC" placeholder="88 lpm"></div>
+      <div class="fg"><label>FR</label><input id="sFR" placeholder="18 rpm"></div>
+      <div class="fg"><label>Temperatura</label><input id="sTe" placeholder="37.2°C"></div>
+      <div class="fg"><label>SpO₂</label><input id="sSp" placeholder="96%"></div>
+      <div class="fg"><label>Glucemia</label><input id="sGl" placeholder="mg/dL"></div>
+    </div>
+    <hr class="sec"><div class="sec-t">CLÍNICO DIARIO</div>
+    <div class="g2">
+      <div class="fg"><label>Dieta</label><select id="sDi"><option value="">--</option><option>Oral</option><option>Parenteral</option><option>Enteral (sonda)</option><option>Oral + Enteral</option><option>NPO (ayuno)</option><option>Dieta líquida</option><option>Dieta blanda</option></select></div>
+      <div class="fg"><label>Fórmula nutricional</label><input id="sFo" placeholder="Supportan, NPT..."></div>
+      <div class="fg"><label>Diuresis (mL/día)</label><input id="sDr" type="number"></div>
+      <div class="fg"><label>Catarsis</label><input id="sCa" type="number" min="0"></div>
+      <div class="fg"><label>Ingresos (mL)</label><input id="sIn" type="number"></div>
+      <div class="fg"><label>Egresos (mL)</label><input id="sEg" type="number"></div>
+    </div>
+    <hr class="sec"><div class="sec-t">RAM</div>
+    <div class="g2">
+      <div class="fg full"><label>Descripción RAM</label><textarea id="sRA"></textarea></div>
+      <div class="fg"><label>Fármaco sospechoso</label><input id="sRF"></div>
+      <div class="fg"><label>Gravedad</label><select id="sRG"><option value="">-- Ninguna --</option><option>Leve</option><option>Moderada</option><option>Grave</option><option>Potencialmente mortal</option></select></div>
+      <div class="fg"><label>Naranjo</label><select id="sNa"><option value="">--</option><option>Definitiva (≥9)</option><option>Probable (5-8)</option><option>Posible (1-4)</option><option>Dudosa (0)</option></select></div>
+      <div class="fg"><label>Notificación AGEMED</label><select id="sNo"><option value="">--</option><option>Pendiente</option><option>Notificada</option><option>No aplica</option></select></div>
+    </div>
+    <hr class="sec"><div class="sec-t">PRM — GRANADA</div>
+    <div class="g2">
+      <div class="fg"><label>Categoría PRM</label><select id="sPc" onchange="updPRM()"><option value="">-- Sin PRM --</option><option value="Necesidad">Necesidad</option><option value="Efectividad">Efectividad</option><option value="Seguridad">Seguridad</option></select></div>
+      <div class="fg"><label>Tipo</label><select id="sPt"><option value="">--</option></select></div>
+      <div class="fg full"><label>Descripción PRM</label><textarea id="sPd"></textarea></div>
+    </div>
+    <hr class="sec"><div class="sec-t">INTERACCIÓN FARMACOLÓGICA</div>
+    <div class="g2">
+      <div class="fg"><label>Medicamentos</label><input id="sIm" placeholder="Rifampicina + Warfarina"></div>
+      <div class="fg"><label>Severidad</label><select id="sIs"><option value="">-- No aplica --</option><option>Leve</option><option>Moderada</option><option>Grave</option><option>Contraindicada</option></select></div>
+      <div class="fg full"><label>Descripción</label><input id="sId"></div>
+    </div>
+    <hr class="sec"><div class="sec-t">INTERVENCIÓN FARMACÉUTICA</div>
+    <div class="g2">
+      <div class="fg full"><label>Intervención</label><textarea id="sAc"></textarea></div>
+      <div class="fg"><label>Resultado</label><select id="sRe"><option value="">--</option><option>Aceptada e implementada</option><option>Aceptada pendiente</option><option>No aceptada</option><option>En evaluación</option></select></div>
+      <div class="fg full"><label>Pendientes</label><textarea id="sPe2"></textarea></div>
+    </div>
+  </div>
+  <div class="mf"><button class="btn btn-o" onclick="cerrar('mSeg')">Cancelar</button><button class="btn btn-p" onclick="guardarSeg()">Guardar seguimiento</button></div>
+</div></div>
+
+<!-- MODAL LABS -->
+<div class="modal-overlay" id="mLab"><div class="modal">
+  <div class="mh"><h3 id="mLabT">Laboratorios</h3><button style="background:none;border:none;font-size:20px;cursor:pointer" onclick="cerrar('mLab')">✕</button></div>
+  <div class="mc2">
+    <div class="hint-date">📅 Ingresa la fecha real del laboratorio</div>
+    <div class="g2">
+      <div class="fg"><label>📅 Fecha *</label><input id="lF" type="date"></div>
+      <div class="fg"><label>Tipo</label><select id="lTi"><option>Rutina</option><option>Control</option><option>Urgencia</option><option>Post-dosis</option></select></div>
+    </div>
+    <div class="sec-t">HEMATOLOGÍA</div>
+    <div class="g3">
+      <div class="fg"><label>Hemoglobina (g/dL)</label><input id="lHb" placeholder="12-17"></div>
+      <div class="fg"><label>Hematocrito (%)</label><input id="lHt" placeholder="36-52"></div>
+      <div class="fg"><label>Leucocitos (x10³)</label><input id="lLe" placeholder="4.5-11"></div>
+      <div class="fg"><label>Neutrófilos (%)</label><input id="lNe" placeholder="50-70"></div>
+      <div class="fg"><label>Linfocitos (%)</label><input id="lLi" placeholder="20-40"></div>
+      <div class="fg"><label>Plaquetas (x10³)</label><input id="lPl" placeholder="150-400"></div>
+    </div>
+    <div class="sec-t">FUNCIÓN RENAL</div>
+    <div class="g3">
+      <div class="fg"><label>Creatinina (mg/dL)</label><input id="lCr" placeholder="0.6-1.3"></div>
+      <div class="fg"><label>BUN (mg/dL)</label><input id="lBu" placeholder="7-25"></div>
+      <div class="fg"><label>Urea (mg/dL)</label><input id="lUr" placeholder="15-45"></div>
+      <div class="fg"><label>FGe/ClCr (mL/min)</label><input id="lFg" placeholder=">60"></div>
+      <div class="fg"><label>Ácido úrico</label><input id="lAu" placeholder="2.4-7.0"></div>
+    </div>
+    <div class="sec-t">FUNCIÓN HEPÁTICA</div>
+    <div class="g3">
+      <div class="fg"><label>TGO/AST (U/L)</label><input id="lTo" placeholder="10-40"></div>
+      <div class="fg"><label>TGP/ALT (U/L)</label><input id="lTp" placeholder="7-56"></div>
+      <div class="fg"><label>Fosfatasa alc.</label><input id="lFa" placeholder="44-147"></div>
+      <div class="fg"><label>GGT (U/L)</label><input id="lGt" placeholder="5-61"></div>
+      <div class="fg"><label>Bilirrubina total</label><input id="lBt" placeholder="0.2-1.2"></div>
+      <div class="fg"><label>Bilirrubina directa</label><input id="lBd" placeholder="0-0.3"></div>
+      <div class="fg"><label>Albúmina (g/dL)</label><input id="lAl" placeholder="3.5-5.0"></div>
+      <div class="fg"><label>Proteínas totales</label><input id="lPr" placeholder="6.3-8.2"></div>
+      <div class="fg"><label>TP (seg)</label><input id="lTP" placeholder="11-13.5"></div>
+      <div class="fg"><label>INR</label><input id="lIN" placeholder="0.8-1.2"></div>
+      <div class="fg"><label>TTPA (seg)</label><input id="lTT" placeholder="25-40"></div>
+    </div>
+    <div class="sec-t">ELECTROLITOS</div>
+    <div class="g3">
+      <div class="fg"><label>Sodio (mEq/L)</label><input id="lNa" placeholder="135-145"></div>
+      <div class="fg"><label>Potasio (mEq/L)</label><input id="lK" placeholder="3.5-5.0"></div>
+      <div class="fg"><label>Cloro (mEq/L)</label><input id="lCl" placeholder="96-106"></div>
+      <div class="fg"><label>Calcio (mg/dL)</label><input id="lCa2" placeholder="8.5-10.5"></div>
+      <div class="fg"><label>Magnesio (mg/dL)</label><input id="lMg" placeholder="1.7-2.2"></div>
+      <div class="fg"><label>Fósforo (mg/dL)</label><input id="lPh" placeholder="2.5-4.5"></div>
+    </div>
+    <div class="sec-t">GLICEMIA / INFLAMATORIOS</div>
+    <div class="g3">
+      <div class="fg"><label>Glucosa (mg/dL)</label><input id="lGl" placeholder="70-100"></div>
+      <div class="fg"><label>HbA1c (%)</label><input id="lHa" placeholder="<7 en DM"></div>
+      <div class="fg"><label>PCR (mg/L)</label><input id="lPC" placeholder="<5"></div>
+      <div class="fg"><label>Procalcitonina</label><input id="lPc2" placeholder="<0.5"></div>
+      <div class="fg"><label>Ferritina (ng/mL)</label><input id="lFe" placeholder="12-300"></div>
+      <div class="fg"><label>DHL (U/L)</label><input id="lDh" placeholder="140-280"></div>
+    </div>
+    <div class="sec-t">OTROS / ESTUDIOS</div>
+    <div class="fg"><label>Otros valores y estudios solicitados</label><textarea id="lOt" placeholder="Ej. TSH: 2.3 · Dímero D: 850 (ALTO) · Rx Tórax pendiente · Eco cardíaco solicitado..."></textarea></div>
+    <div class="fg" style="margin-top:8px"><label>Observaciones</label><textarea id="lOb" placeholder="Interpretación, tendencias..."></textarea></div>
+  </div>
+  <div class="mf"><button class="btn btn-o" onclick="cerrar('mLab')">Cancelar</button><button class="btn btn-p" onclick="guardarLab()">Guardar laboratorios</button></div>
+</div></div>
+
+<!-- MODAL CULTIVO -->
+<div class="modal-overlay" id="mCul"><div class="modal">
+  <div class="mh"><h3 id="mCulT">Cultivo / Antibiograma</h3><button style="background:none;border:none;font-size:20px;cursor:pointer" onclick="cerrar('mCul')">✕</button></div>
+  <div class="mc2">
+    <div class="hint-date">📅 Ingresa las fechas reales de toma y resultado</div>
+    <div class="g2">
+      <div class="fg"><label>📅 Fecha de toma *</label><input id="cFt" type="date"></div>
+      <div class="fg"><label>📅 Fecha de resultado</label><input id="cFr" type="date"></div>
+      <div class="fg"><label>Tipo de muestra</label><select id="cTi"><option value="">--</option><option>Hemocultivo</option><option>Urocultivo</option><option>Esputo/BAL</option><option>BK / Baciloscopia</option><option>Cultivo de herida</option><option>Cultivo de catéter</option><option>LCR</option><option>Líquido pleural</option><option>Hisopado</option><option>Otro</option></select></div>
+      <div class="fg"><label>Resultado</label><select id="cRe"><option value="">--</option><option>Positivo</option><option>Negativo</option><option>Contaminado</option><option>Pendiente</option></select></div>
+      <div class="fg"><label>Microorganismo</label><input id="cGe" placeholder="Klebsiella pneumoniae BLEE"></div>
+      <div class="fg"><label>UFC / Morfología</label><input id="cUF" placeholder=">100,000 UFC/mL"></div>
+      <div class="fg full"><label>Sensible a</label><textarea id="cSe" placeholder="Meropenem, Amikacina..."></textarea></div>
+      <div class="fg full"><label>Resistente a</label><textarea id="cRs" placeholder="Ampicilina, Ciprofloxacino..."></textarea></div>
+      <div class="fg full"><label>Comentarios</label><textarea id="cCo"></textarea></div>
+    </div>
+  </div>
+  <div class="mf"><button class="btn btn-o" onclick="cerrar('mCul')">Cancelar</button><button class="btn btn-p" onclick="guardarCul()">Guardar cultivo</button></div>
+</div></div>
+
+<!-- MODAL FOTO IA -->
+<div class="modal-overlay" id="mFoto"><div class="modal">
+  <div class="mh"><h3>📷 Analizar foto con IA</h3><button style="background:none;border:none;font-size:20px;cursor:pointer" onclick="cerrar('mFoto')">✕</button></div>
+  <div class="mc2">
+    <div style="font-size:12px;color:var(--txt2);margin-bottom:10px">Sube foto(s) del documento. La IA extrae los datos automáticamente.</div>
+    <div class="fg" style="margin-bottom:10px"><label>Tipo de documento</label>
+      <select id="fTi"><option value="auto">Detectar automáticamente</option><option value="indicaciones">Indicaciones / Kardex</option><option value="laboratorio">Laboratorios</option><option value="cultivo">Cultivo / Antibiograma</option><option value="evolucion">Evolución clínica</option></select>
+    </div>
+    <div class="fz"><input type="file" id="fInput" accept="image/*" multiple onchange="prevFotos(this)">
+      <div style="font-size:26px;margin-bottom:5px">📷</div>
+      <div style="font-size:13px;font-weight:500">Toca para elegir foto</div>
+      <div style="font-size:11px;color:var(--txt3);margin-top:2px">Puedes subir varias a la vez</div>
+    </div>
+    <div class="fp" id="fPrev"></div>
+    <div id="fLoad" style="display:none;text-align:center;padding:14px"><div class="spin" style="margin-bottom:7px"></div><div style="font-size:12px;color:var(--txt2)">Analizando...</div></div>
+    <div id="fRes" style="display:none;margin-top:10px">
+      <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:5px">✅ Datos extraídos:</div>
+      <div id="fResTxt" style="background:#f8fafc;border:1px solid var(--border);border-radius:7px;padding:9px;font-size:11px;font-family:monospace;white-space:pre-wrap;max-height:200px;overflow-y:auto;line-height:1.5"></div>
+    </div>
+  </div>
+  <div class="mf">
+    <button class="btn btn-o" onclick="cerrar('mFoto')">Cancelar</button>
+    <button class="btn btn-p" id="fBtnA" onclick="analizarFoto()" disabled>🔬 Analizar</button>
+    <button class="btn btn-n" id="fBtnAp" style="display:none" onclick="aplicarFoto()">✓ Aplicar</button>
+  </div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── STORAGE ──
+const KP='fv2_pats';
+const KS=p=>'fv2_s_'+p, KL=p=>'fv2_l_'+p, KC=p=>'fv2_c_'+p, KK=p=>'fv2_k_'+p;
+const gP=()=>{try{return JSON.parse(localStorage.getItem(KP)||'[]')}catch{return[]}};
+const sP=d=>localStorage.setItem(KP,JSON.stringify(d));
+const gS=p=>{try{return JSON.parse(localStorage.getItem(KS(p))||'[]')}catch{return[]}};
+const ssS=(p,d)=>localStorage.setItem(KS(p),JSON.stringify(d));
+const gL=p=>{try{return JSON.parse(localStorage.getItem(KL(p))||'[]')}catch{return[]}};
+const sL=(p,d)=>localStorage.setItem(KL(p),JSON.stringify(d));
+const gC=p=>{try{return JSON.parse(localStorage.getItem(KC(p))||'[]')}catch{return[]}};
+const sC=(p,d)=>localStorage.setItem(KC(p),JSON.stringify(d));
+// kardex manual: {meds:[{nombre,dosis,via,frec,grupo}], checks:{YYYY-MM-DD:{medIdx:{M:bool,T:bool,N:bool}}}}
+const gK=p=>{try{return JSON.parse(localStorage.getItem(KK(p))||'{"meds":[],"checks":{}}')}catch{return{meds:[],checks:{}}}};
+const sK=(p,d)=>localStorage.setItem(KK(p),JSON.stringify(d));
+
+let pid=null, editPid=null, editSi=null, editLi=null, editCi=null;
+let fFiles=[], fData=null;
+let kdxMes=null; // YYYY-MM para kardex
+
+window.onload=()=>renderSidebar('');
+const today=()=>new Date().toISOString().slice(0,10);
+const todayYM=()=>today().slice(0,7);
+const fmt=d=>d?d.split('-').reverse().join('/'):'-';
+const v=id=>{const e=document.getElementById(id);return e?e.value.trim():''};
+const MESES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const DIAS_SHORT=['Do','Lu','Ma','Mi','Ju','Vi','Sá'];
+
+// ── SIDEBAR ──
+function renderSidebar(q){
+  const pats=gP().filter(p=>!q||p.n.toLowerCase().includes(q.toLowerCase())||(p.h||'').includes(q));
+  const el=document.getElementById('patList');
+  if(!pats.length){el.innerHTML='<div class="nopats">Sin pacientes</div>';return}
+  el.innerHTML=pats.map(p=>{
+    const segs=gS(p.id),labs=gL(p.id),cults=gC(p.id);
+    const all=[...segs.map(s=>s.f),...labs.map(l=>l.f)].filter(Boolean).sort((a,b)=>b.localeCompare(a));
+    const ult=all[0]||null;
+    const crit=labs.flatMap(l=>getCrit(l)).length;
+    const culP=cults.filter(c=>c.re==='Positivo').length;
+    return`<div class="pc ${pid===p.id?'active':''}" onclick="selPac('${p.id}')">
+      <div class="pn">${p.n}</div>
+      <div class="pm">HC: ${p.h||'-'} · ${p.sv||'Sin servicio'}</div>
+      <div class="pm">Último: ${fmt(ult)}</div>
+      <div class="pbadges">
+        ${p.g?`<span class="bdg bt">${p.g}</span>`:''}
+        ${crit>0?`<span class="bdg bd">⚠ Críticos</span>`:''}
+        ${culP>0?`<span class="bdg bw">🦠 Cultivo+</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+function filtrar(q){renderSidebar(q)}
+function selPac(id){pid=id;kdxMes=todayYM();renderSidebar(document.querySelector('.sb-search').value);renderMain(id)}
+
+// ── MAIN ──
+function renderMain(id){
+  const p=gP().find(x=>x.id===id);
+  if(!p){document.getElementById('mainContent').innerHTML='';return}
+  const segs=gS(id),labs=gL(id),cults=gC(id);
+  const alertas=genAlertas(p,segs,labs,cults);
+  const dias=p.fi?Math.floor((new Date()-new Date(p.fi))/(86400000)):'-';
+  document.getElementById('mainContent').innerHTML=`
+    <div class="ph">
+      <div>
+        <h2>${p.n}</h2>
+        <div class="ph-det">
+          <span class="pd">📋 HC: <b>${p.h||'-'}</b></span>
+          <span class="pd">🏥 ${p.sv||'Sin servicio'}${p.ca?' · Cama '+p.ca:''}</span>
+          <span class="pd">👤 ${p.e||'-'}${p.s?' · '+p.s:''}${p.pe?' · '+p.pe+' kg':''}</span>
+          <span class="pd">🗂 ${p.g||'Sin grupo'}</span>
+          <span class="pd">📅 Ingreso: ${fmt(p.fi)}</span>
+        </div>
+      </div>
+      <div class="ph-act">
+        <button class="btn btn-sm" style="background:#e8f4fd;color:var(--info);border:none;cursor:pointer" onclick="abrirFoto()">📷 IA</button>
+        <button class="btn btn-sm btn-p" onclick="abrirSeg()">+ Seguimiento</button>
+        <button class="btn btn-sm btn-n" onclick="abrirLab()">+ Labs</button>
+        <button class="btn btn-sm btn-w" onclick="abrirCul()">+ Cultivo</button>
+        <button class="btn btn-sm btn-o" onclick="editPac('${id}')">✏</button>
+        <button class="btn btn-sm btn-d" onclick="delPac('${id}')">🗑</button>
+      </div>
+    </div>
+    ${alertas.map(a=>`<div class="albox al-${a.t}"><span style="font-size:15px">${a.t==='d'?'🔴':'🟡'}</span><div><div class="al-t">${a.ti}</div><div class="al-tx">${a.tx}</div></div></div>`).join('')}
+    <div class="tabs">
+      <div class="tab active" onclick="swTab('tl',this)">📅 Línea de tiempo</div>
+      <div class="tab" onclick="swTab('kdx',this)">💊 Kardex</div>
+      <div class="tab" onclick="swTab('ltl',this)">🧪 Labs cronológico</div>
+      <div class="tab" onclick="swTab('ctl',this)">🦠 Cultivos cronológico</div>
+      <div class="tab" onclick="swTab('res',this)">📊 Resumen</div>
+      <div class="tab" onclick="swTab('seg',this)">📋 Seguimientos</div>
+    </div>
+    <div id="tab-tl"  class="tab-content active">${tabTimeline(p,segs,labs,cults)}</div>
+    <div id="tab-kdx" class="tab-content">${tabKardex(p,segs)}</div>
+    <div id="tab-ltl" class="tab-content">${tabLabsTimeline(labs,id)}</div>
+    <div id="tab-ctl" class="tab-content">${tabCultTimeline(cults,id)}</div>
+    <div id="tab-res" class="tab-content">${tabRes(p,segs,labs,cults,dias)}</div>
+    <div id="tab-seg" class="tab-content">${tabSeg(segs,id)}</div>
+  `;
+}
+function swTab(name,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+// ── KARDEX: tabla medicamento × días ──
+function tabKardex(p,segs){
+  if(!pid) return '';
+  const ym=kdxMes||todayYM();
+  const [yr,mo]=ym.split('-').map(Number);
+  const diasMes=new Date(yr,mo,0).getDate();
+  const hoy=today();
+
+  // Extraer medicamentos únicos del tratamiento registrado en los seguimientos del mes
+  const medsDelSeg=new Set();
+  segs.filter(s=>s.f&&s.f.startsWith(ym)&&s.tr2).forEach(s=>{
+    s.tr2.split('\n').forEach(l=>{const t=l.trim();if(t)medsDelSeg.add(t)});
+  });
+
+  // Kardex manual guardado
+  const kdata=gK(pid);
+  // Agregar meds del seg que no estén
+  medsDelSeg.forEach(m=>{
+    const nombre=m.split('—')[0].split('-')[0].trim();
+    if(!kdata.meds.find(x=>x.nombre.toLowerCase()===nombre.toLowerCase())){
+      kdata.meds.push({nombre,dosis:'',via:'',frec:'',grupo:''});
+    }
+  });
+
+  // Agrupar por grupo
+  const grupos={};
+  kdata.meds.forEach((med,i)=>{
+    const g=med.grupo||'Medicamentos';
+    if(!grupos[g])grupos[g]=[];
+    grupos[g].push({...med,_i:i});
+  });
+
+  // Generar opciones de mes
+  const mesesOpts=[];
+  for(let m=-3;m<=3;m++){
+    const d=new Date(yr,mo-1+m,1);
+    const val=d.toISOString().slice(0,7);
+    const label=MESES[d.getMonth()]+' '+d.getFullYear();
+    mesesOpts.push(`<option value="${val}" ${val===ym?'selected':''}>${label}</option>`);
+  }
+
+  let html=`
+  <div class="card">
+    <div class="ct">💊 Kardex de medicamentos
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <select class="ctl-sel" onchange="kdxCambiarMes(this.value)">${mesesOpts.join('')}</select>
+        <button class="btn btn-sm btn-p" onclick="kdxAgregarMed()">+ Medicamento</button>
+      </div>
+    </div>
+    <div class="add-row-bar" id="kdxAddBar" style="display:none">
+      <input id="kdxNombre" placeholder="Nombre del medicamento *">
+      <input id="kdxDosis" placeholder="Dosis (ej. 1g)">
+      <input id="kdxVia" placeholder="Vía (ej. IV)">
+      <input id="kdxFrec" placeholder="Frec. (ej. c/8h)">
+      <input id="kdxGrupo" placeholder="Grupo (ej. Antibióticos)">
+      <button class="btn btn-sm btn-p" onclick="kdxGuardarMed()">Agregar</button>
+      <button class="btn btn-sm btn-o" onclick="document.getElementById('kdxAddBar').style.display='none'">✕</button>
+    </div>
+    <div class="ct-wrap">
+    <table class="ct-tbl">
+      <thead>
+        <tr>
+          <th class="row-h">Medicamento</th>
+          ${Array.from({length:diasMes},(_,i)=>{
+            const d=i+1;
+            const fecha=ym+'-'+(d<10?'0':'')+d;
+            const dt=new Date(yr,mo-1,d);
+            const wd=dt.getDay();
+            const isHoy=fecha===hoy;
+            const isWe=wd===0||wd===6;
+            return`<th class="kdx-day ${isHoy?'today-col':''} ${isWe?'weekend-col':''}" title="${DIAS_SHORT[wd]} ${d}">${d}<br><span style="font-size:8px;opacity:.7">${DIAS_SHORT[wd]}</span></th>`;
+          }).join('')}
+          <th style="min-width:50px">Acc.</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+  if(!kdata.meds.length){
+    html+=`<tr><td class="row-cell" colspan="${diasMes+2}" style="text-align:center;color:var(--txt3);padding:16px">Sin medicamentos. Agrega uno con el botón "+" o registra seguimientos con tratamiento.</td></tr>`;
+  } else {
+    Object.entries(grupos).forEach(([grp,meds])=>{
+      html+=`<tr><td class="group-row" colspan="${diasMes+2}">${grp}</td></tr>`;
+      meds.forEach(med=>{
+        html+=`<tr>
+          <td class="row-cell">${med.nombre}<span class="sub">${[med.dosis,med.via,med.frec].filter(Boolean).join(' · ')}</span></td>`;
+        for(let d=1;d<=diasMes;d++){
+          const fecha=ym+'-'+(d<10?'0':'')+d;
+          const dt=new Date(yr,mo-1,d);
+          const wd=dt.getDay();
+          const isHoy=fecha===hoy;
+          const isWe=wd===0||wd===6;
+          const checks=kdata.checks[fecha]?.[med._i]||{};
+          const M=checks.M?'✓':'·';
+          const T=checks.T?'✓':'·';
+          const N=checks.N?'✓':'·';
+          html+=`<td class="${isHoy?'today-col':''} ${isWe?'weekend-col':''}" style="padding:2px">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:0px;font-size:10px">
+              <span class="ck-cell" onclick="kdxToggle('${fecha}',${med._i},'M')" title="Mañana" style="color:${checks.M?'var(--ok)':'var(--txt3)'}">${M}</span>
+              <span class="ck-cell" onclick="kdxToggle('${fecha}',${med._i},'T')" title="Tarde" style="color:${checks.T?'var(--warn)':'var(--txt3)'}">${T}</span>
+              <span class="ck-cell" onclick="kdxToggle('${fecha}',${med._i},'N')" title="Noche" style="color:${checks.N?'var(--info)':'var(--txt3)'}">${N}</span>
+            </div>
+          </td>`;
+        }
+        html+=`<td><button class="btn btn-sm btn-d" onclick="kdxEliminarMed(${med._i})">🗑</button></td></tr>`;
+      });
+    });
+  }
+
+  html+=`</tbody></table></div>
+    <div class="kdx-legend">
+      <span style="color:var(--ok)">✓ Mañana</span>
+      <span style="color:var(--warn)">✓ Tarde</span>
+      <span style="color:var(--info)">✓ Noche</span>
+      <span>· = No administrado / no registrado</span>
+    </div>
+  </div>`;
+  return html;
+}
+
+function kdxCambiarMes(ym){kdxMes=ym;const p=gP().find(x=>x.id===pid);if(p){document.getElementById('tab-kdx').innerHTML=tabKardex(p,gS(pid))}}
+function kdxAgregarMed(){document.getElementById('kdxAddBar').style.display='flex'}
+function kdxGuardarMed(){
+  const nombre=document.getElementById('kdxNombre').value.trim();
+  if(!nombre){toast('Ingresa el nombre del medicamento');return}
+  const kdata=gK(pid);
+  kdata.meds.push({nombre,dosis:document.getElementById('kdxDosis').value.trim(),via:document.getElementById('kdxVia').value.trim(),frec:document.getElementById('kdxFrec').value.trim(),grupo:document.getElementById('kdxGrupo').value.trim()||'Medicamentos'});
+  sK(pid,kdata);
+  document.getElementById('tab-kdx').innerHTML=tabKardex(gP().find(x=>x.id===pid),gS(pid));
+  toast('✅ Medicamento agregado');
+}
+function kdxEliminarMed(idx){
+  if(!confirm('¿Eliminar medicamento del kardex?'))return;
+  const kdata=gK(pid);kdata.meds.splice(idx,1);sK(pid,kdata);
+  document.getElementById('tab-kdx').innerHTML=tabKardex(gP().find(x=>x.id===pid),gS(pid));toast('Eliminado');
+}
+function kdxToggle(fecha,medIdx,turno){
+  const kdata=gK(pid);
+  if(!kdata.checks[fecha])kdata.checks[fecha]={};
+  if(!kdata.checks[fecha][medIdx])kdata.checks[fecha][medIdx]={};
+  kdata.checks[fecha][medIdx][turno]=!kdata.checks[fecha][medIdx][turno];
+  sK(pid,kdata);
+  document.getElementById('tab-kdx').innerHTML=tabKardex(gP().find(x=>x.id===pid),gS(pid));
+}
+
+// ── LABS CRONOLÓGICO: parámetros × fechas ──
+function tabLabsTimeline(labs,id){
+  if(!labs.length) return`<div class="card"><div style="text-align:center;color:var(--txt3);padding:20px">Sin laboratorios registrados.<br><br><button class="btn btn-p" onclick="abrirLab()">+ Agregar laboratorio</button></div></div>`;
+
+  const labsOrd=[...labs].filter(l=>l.f).sort((a,b)=>a.f.localeCompare(b.f));
+  const fechas=labsOrd.map(l=>l.f);
+  const hoy=today();
+
+  // Parámetros a mostrar (solo los que tienen al menos 1 valor)
+  const params=[
+    {k:'hb',l:'Hemoglobina',u:'g/dL',r:'hb',grupo:'Hematología'},
+    {k:'ht',l:'Hematocrito',u:'%',r:'hto',grupo:'Hematología'},
+    {k:'le',l:'Leucocitos',u:'x10³',r:'leuco',grupo:'Hematología'},
+    {k:'ne',l:'Neutrófilos',u:'%',r:'',grupo:'Hematología'},
+    {k:'pl',l:'Plaquetas',u:'x10³',r:'plaq',grupo:'Hematología'},
+    {k:'cr',l:'Creatinina',u:'mg/dL',r:'creat',grupo:'Función Renal'},
+    {k:'bu',l:'BUN',u:'mg/dL',r:'',grupo:'Función Renal'},
+    {k:'ur',l:'Urea',u:'mg/dL',r:'',grupo:'Función Renal'},
+    {k:'fg',l:'FGe/ClCr',u:'mL/min',r:'',grupo:'Función Renal'},
+    {k:'to',l:'TGO/AST',u:'U/L',r:'',grupo:'Función Hepática'},
+    {k:'tp2',l:'TGP/ALT',u:'U/L',r:'',grupo:'Función Hepática'},
+    {k:'fa',l:'Fosfatasa alc.',u:'U/L',r:'',grupo:'Función Hepática'},
+    {k:'bt',l:'Bilirrubina T',u:'mg/dL',r:'',grupo:'Función Hepática'},
+    {k:'al',l:'Albúmina',u:'g/dL',r:'',grupo:'Función Hepática'},
+    {k:'tp',l:'TP',u:'seg',r:'',grupo:'Coagulación'},
+    {k:'in',l:'INR',u:'',r:'inr',grupo:'Coagulación'},
+    {k:'tt',l:'TTPA',u:'seg',r:'',grupo:'Coagulación'},
+    {k:'na',l:'Sodio',u:'mEq/L',r:'na',grupo:'Electrolitos'},
+    {k:'k',l:'Potasio',u:'mEq/L',r:'k',grupo:'Electrolitos'},
+    {k:'cl',l:'Cloro',u:'mEq/L',r:'',grupo:'Electrolitos'},
+    {k:'ca',l:'Calcio',u:'mg/dL',r:'',grupo:'Electrolitos'},
+    {k:'mg',l:'Magnesio',u:'mg/dL',r:'',grupo:'Electrolitos'},
+    {k:'gl',l:'Glucosa',u:'mg/dL',r:'glucosa',grupo:'Glicemia/Inflamación'},
+    {k:'ha',l:'HbA1c',u:'%',r:'',grupo:'Glicemia/Inflamación'},
+    {k:'pc',l:'PCR',u:'mg/L',r:'',grupo:'Glicemia/Inflamación'},
+    {k:'pc2',l:'Procalcitonina',u:'ng/mL',r:'',grupo:'Glicemia/Inflamación'},
+    {k:'dh',l:'DHL',u:'U/L',r:'',grupo:'Glicemia/Inflamación'},
+  ].filter(p=>labsOrd.some(l=>l[p.k]));
+
+  if(!params.length&&!labsOrd.some(l=>l.ot)) return`<div class="card"><div style="text-align:center;color:var(--txt3);padding:16px">Los laboratorios no tienen valores registrados.</div></div>`;
+
+  // Agrupar parámetros
+  const grupos={};
+  params.forEach(p=>{if(!grupos[p.grupo])grupos[p.grupo]=[];grupos[p.grupo].push(p)});
+
+  let html=`<div class="card"><div class="ct">🧪 Laboratorios en el tiempo <span style="font-size:10px;color:var(--txt3);font-weight:400">${labsOrd.length} registros</span>
+    <button class="btn btn-sm btn-p" onclick="abrirLab()">+ Nuevo</button></div>
+  <div class="ct-wrap"><table class="ct-tbl">
+    <thead><tr>
+      <th class="row-h">Parámetro</th>
+      ${fechas.map(f=>`<th class="${f===hoy?'today-col':''}">${fmt(f)}</th>`).join('')}
+    </tr></thead>
+    <tbody>`;
+
+  Object.entries(grupos).forEach(([grp,prms])=>{
+    html+=`<tr><td class="group-row" colspan="${fechas.length+1}">${grp}</td></tr>`;
+    prms.forEach(par=>{
+      html+=`<tr><td class="row-cell">${par.l}<span class="sub">${par.u}</span></td>`;
+      fechas.forEach(f=>{
+        const lab=labsOrd.find(l=>l.f===f);
+        const val=lab?lab[par.k]:'';
+        if(!val){html+=`<td>—</td>`;return}
+        const st=evalLab(par.r,val);
+        html+=`<td class="${st==='critical'?'cv-crit':'cv-ok'}">${val}</td>`;
+      });
+      html+=`</tr>`;
+    });
+  });
+
+  // Fila "Otros / Estudios"
+  if(labsOrd.some(l=>l.ot)){
+    html+=`<tr><td class="group-row" colspan="${fechas.length+1}">Otros valores y estudios</td></tr>`;
+    html+=`<tr><td class="row-cell">Otros / Estudios<span class="sub">texto libre</span></td>`;
+    fechas.forEach(f=>{
+      const lab=labsOrd.find(l=>l.f===f);
+      const val=lab?lab.ot:'';
+      html+=`<td style="font-size:10px;text-align:left;max-width:140px;white-space:pre-wrap">${val||'—'}</td>`;
+    });
+    html+=`</tr>`;
+  }
+
+  // Fila editar/eliminar
+  html+=`<tr><td class="row-cell" style="color:var(--txt3)">Acciones</td>`;
+  labsOrd.forEach((l,i)=>{
+    const realIdx=labs.indexOf(l);
+    html+=`<td style="white-space:nowrap">
+      <button class="btn btn-sm btn-o" onclick="editLab(${realIdx},'${id}')">✏</button>
+      <button class="btn btn-sm btn-d" onclick="delLab(${realIdx},'${id}')">🗑</button>
+    </td>`;
+  });
+  html+=`</tr>`;
+
+  html+=`</tbody></table></div>
+  <div class="kdx-legend">
+    <span style="background:#fde8e8;color:var(--danger);padding:2px 6px;border-radius:4px;font-weight:700">Valor = Crítico</span>
+    <span style="background:#e8f8f0;color:var(--ok);padding:2px 6px;border-radius:4px">Valor = Normal/Registrado</span>
+    <span>— = Sin dato ese día</span>
+  </div></div>`;
+  return html;
+}
+
+// ── CULTIVOS CRONOLÓGICO: cultivo × fechas ──
+function tabCultTimeline(cults,id){
+  if(!cults.length) return`<div class="card"><div style="text-align:center;color:var(--txt3);padding:20px">Sin cultivos registrados.<br><br><button class="btn btn-w" onclick="abrirCul()">+ Agregar cultivo</button></div></div>`;
+
+  const cultsOrd=[...cults].map((c,i)=>({...c,_i:i})).sort((a,b)=>(a.ft||'').localeCompare(b.ft||''));
+  const hoy=today();
+
+  let html=`<div class="card"><div class="ct">🦠 Cultivos y antibiogramas en el tiempo
+    <button class="btn btn-sm btn-w" onclick="abrirCul()">+ Nuevo</button></div>
+  <div class="ct-wrap"><table class="ct-tbl">
+    <thead><tr>
+      <th class="row-h">Parámetro</th>
+      ${cultsOrd.map(c=>`<th style="min-width:100px">
+        <div>${c.ti||'Cultivo'}</div>
+        <div style="font-size:9px;opacity:.7">Toma: ${fmt(c.ft)}</div>
+        ${c.fr?`<div style="font-size:9px;opacity:.7">Result: ${fmt(c.fr)}</div>`:''}
+      </th>`).join('')}
+    </tr></thead>
+    <tbody>
+      <tr><td class="group-row" colspan="${cultsOrd.length+1}">Resultado del cultivo</td></tr>
+      <tr>
+        <td class="row-cell">Resultado</td>
+        ${cultsOrd.map(c=>`<td class="${c.re==='Positivo'?'cv-pos':c.re==='Negativo'?'cv-neg':'cv-pend'}">${c.re||'Pendiente'}</td>`).join('')}
+      </tr>
+      <tr><td class="group-row" colspan="${cultsOrd.length+1}">Microbiología</td></tr>
+      <tr>
+        <td class="row-cell">Microorganismo</td>
+        ${cultsOrd.map(c=>`<td style="font-size:10px;text-align:left;padding:4px 6px">${c.ge||'—'}${c.uf?'<br><span style="color:var(--txt3)">'+c.uf+'</span>':''}</td>`).join('')}
+      </tr>
+      <tr><td class="group-row" colspan="${cultsOrd.length+1}">Antibiograma</td></tr>
+      <tr>
+        <td class="row-cell">Sensible a</td>
+        ${cultsOrd.map(c=>`<td style="font-size:10px;text-align:left;color:var(--ok);padding:4px 6px;max-width:130px">${c.se||'—'}</td>`).join('')}
+      </tr>
+      <tr>
+        <td class="row-cell">Resistente a</td>
+        ${cultsOrd.map(c=>`<td style="font-size:10px;text-align:left;color:var(--danger);padding:4px 6px;max-width:130px">${c.rs||'—'}</td>`).join('')}
+      </tr>
+      <tr>
+        <td class="row-cell">Comentario</td>
+        ${cultsOrd.map(c=>`<td style="font-size:10px;text-align:left;font-style:italic;padding:4px 6px;max-width:130px">${c.co||'—'}</td>`).join('')}
+      </tr>
+      <tr><td class="group-row" colspan="${cultsOrd.length+1}">Acciones</td></tr>
+      <tr>
+        <td class="row-cell" style="color:var(--txt3)">Editar / Eliminar</td>
+        ${cultsOrd.map(c=>`<td>
+          <button class="btn btn-sm btn-o" onclick="editCul(${c._i},'${id}')">✏</button>
+          <button class="btn btn-sm btn-d" onclick="delCul(${c._i},'${id}')">🗑</button>
+        </td>`).join('')}
+      </tr>
+    </tbody>
+  </table></div>
+  <div class="kdx-legend">
+    <span style="background:#fde8e8;color:var(--danger);padding:2px 6px;border-radius:4px;font-weight:700">Positivo</span>
+    <span style="background:#e8f8f0;color:var(--ok);padding:2px 6px;border-radius:4px">Negativo</span>
+    <span style="background:#fff8e8;color:#c17f00;padding:2px 6px;border-radius:4px">Pendiente</span>
+  </div></div>`;
+  return html;
+}
+
+// ── LÍNEA DE TIEMPO ──
+function tabTimeline(p,segs,labs,cults){
+  const eventos=[];
+  segs.forEach((s,i)=>{if(s.f)eventos.push({fecha:s.f,tipo:'seg',idx:i,data:s})});
+  labs.forEach((l,i)=>{if(l.f)eventos.push({fecha:l.f,tipo:'lab',idx:i,data:l})});
+  cults.forEach((c,i)=>{const f=c.fr||c.ft;if(f)eventos.push({fecha:f,tipo:'cul',idx:i,data:c})});
+  if(!eventos.length) return`<div class="card"><div style="text-align:center;color:var(--txt3);padding:24px;font-size:13px">📅 Sin registros aún.<br><br>Agrega seguimientos, laboratorios o cultivos.</div></div>`;
+  eventos.sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const porFecha={};
+  eventos.forEach(e=>{if(!porFecha[e.fecha])porFecha[e.fecha]=[];porFecha[e.fecha].push(e)});
+  let html=`<div class="card"><div class="ct">📅 Línea de tiempo <span style="font-size:10px;color:var(--txt3);font-weight:400">${eventos.length} registros</span></div><div class="timeline">`;
+  Object.entries(porFecha).forEach(([fecha,evs])=>{
+    html+=`<div><div class="tl-date-header"><span class="tl-date-label">📅 ${fmt(fecha)}</span></div>`;
+    evs.forEach(e=>{
+      if(e.tipo==='seg') html+=renderTlSeg(e.data,e.idx,p.id);
+      else if(e.tipo==='lab') html+=renderTlLab(e.data,e.idx,p.id);
+      else html+=renderTlCul(e.data,e.idx,p.id);
+    });
+    html+='</div>';
+  });
+  html+='</div></div>';
+  return html;
+}
+function renderTlSeg(s,idx,patId){
+  const svParts=[s.pa?'PA:'+s.pa:'',s.fc?'FC:'+s.fc:'',s.te?'T:'+s.te+'°':'',s.sp?'SpO₂:'+s.sp+'%':''].filter(Boolean);
+  const uid='tl_s_'+idx+'_'+Date.now();
+  return`<div class="tl-item seg">
+    <div class="tl-header"><span class="tl-tipo seg">📋 Seguimiento</span><span style="font-size:10px;color:var(--txt3)">${s.tu||''}</span></div>
+    <div class="tl-body">
+      ${s.ev?`<div>${s.ev.slice(0,100)}${s.ev.length>100?'...':''}</div>`:''}
+      ${svParts.length?`<div style="margin-top:3px;font-size:10px;color:var(--txt3)">${svParts.join(' · ')}</div>`:''}
+      <div style="margin-top:4px">
+        ${s.ra?`<span class="tl-badge ram">⚠ RAM</span>`:''}
+        ${s.pc?`<span class="tl-badge prm">PRM: ${s.pc}</span>`:''}
+        ${s.ac?`<span class="tl-badge int">✅ Intervención</span>`:''}
+      </div>
+    </div>
+    <span class="tl-expand" onclick="toggleDetail('${uid}')">▼ Ver detalle</span>
+    <div class="tl-detail" id="${uid}">
+      ${s.ev?`<div><b>Evolución:</b><br><span style="white-space:pre-line;font-size:11px">${s.ev}</span></div>`:''}
+      ${s.tr2?`<div style="margin-top:5px"><b>Tratamiento:</b><br><span style="white-space:pre-line;font-size:11px">${s.tr2}</span></div>`:''}
+      ${s.dr?`<div style="margin-top:4px"><b>Diuresis:</b> <span style="${parseInt(s.dr)<500?'color:var(--danger);font-weight:700':''}">${s.dr} mL${parseInt(s.dr)<500?' ⚠':''}</span></div>`:''}
+      ${s.ra?`<div style="margin-top:5px;background:#fff8e8;border-radius:5px;padding:5px"><b>⚠ RAM:</b> ${s.ra} — ${s.rf||''} (${s.rg||'-'})</div>`:''}
+      ${s.ac?`<div style="margin-top:5px;background:#eaf8f0;border-radius:5px;padding:5px"><b>✅ Intervención:</b> ${s.ac}</div>`:''}
+      ${s.pe2?`<div style="margin-top:4px;color:var(--warn)"><b>⏰ Pendiente:</b> ${s.pe2}</div>`:''}
+      <div class="tl-actions">
+        <button class="btn btn-sm btn-o" onclick="editSeg(${idx},'${patId}')">✏ Editar</button>
+        <button class="btn btn-sm btn-d" onclick="delSeg(${idx},'${patId}')">🗑</button>
+      </div>
+    </div>
+  </div>`;
+}
+function renderTlLab(l,idx,patId){
+  const campos=[{k:'hb',l:'Hb',r:'hb'},{k:'cr',l:'Creat',r:'creat'},{k:'k',l:'K',r:'k'},{k:'na',l:'Na',r:'na'},{k:'pl',l:'Plaq',r:'plaq'},{k:'le',l:'Leuco',r:'leuco'},{k:'in',l:'INR',r:'inr'},{k:'gl',l:'Gluc',r:'glucosa'},{k:'to',l:'TGO',r:''},{k:'tp2',l:'TGP',r:''},{k:'fg',l:'FGe',r:''},{k:'pc',l:'PCR',r:''},{k:'pc2',l:'PCT',r:''}].filter(c=>l[c.k]);
+  const critNames=getCrit(l);
+  const uid='tl_l_'+idx+'_'+Date.now();
+  return`<div class="tl-item lab">
+    <div class="tl-header"><span class="tl-tipo lab">🧪 Labs — ${l.ti||'Rutina'}</span>${critNames.length?`<span class="tl-badge crit">🚨 ${critNames.length} crítico(s)</span>`:''}</div>
+    <div class="tl-body">
+      <div class="tl-lab-mini">${campos.map(c=>{const st=evalLab(c.r,l[c.k]);return`<span class="tl-lab-chip ${st==='critical'?'crit':''}">${c.l}:${l[c.k]}${st==='critical'?' 🚨':''}</span>`}).join('')}</div>
+      ${l.ot?`<div style="margin-top:4px;font-size:10px;color:var(--txt3)">Otros: ${l.ot.slice(0,70)}...</div>`:''}
+    </div>
+    <span class="tl-expand" onclick="toggleDetail('${uid}')">▼ Ver todos</span>
+    <div class="tl-detail" id="${uid}">
+      ${critNames.length?`<div style="background:#fde8e8;border-radius:5px;padding:5px;margin-bottom:5px"><b>🚨 Críticos:</b> ${critNames.join(' · ')}</div>`:''}
+      ${l.ot?`<div><b>Otros/Estudios:</b><br><span style="white-space:pre-line;font-size:11px">${l.ot}</span></div>`:''}
+      ${l.ob?`<div style="margin-top:4px;font-style:italic;font-size:11px">${l.ob}</div>`:''}
+      <div class="tl-actions">
+        <button class="btn btn-sm btn-o" onclick="editLab(${idx},'${patId}')">✏ Editar</button>
+        <button class="btn btn-sm btn-d" onclick="delLab(${idx},'${patId}')">🗑</button>
+      </div>
+    </div>
+  </div>`;
+}
+function renderTlCul(c,idx,patId){
+  const isPos=c.re==='Positivo';
+  const uid='tl_c_'+idx+'_'+Date.now();
+  return`<div class="tl-item cul ${isPos?'pos':''}">
+    <div class="tl-header"><span class="tl-tipo cul ${isPos?'pos':''}">${isPos?'🚨':'🦠'} ${c.ti||'Cultivo'}</span><span class="bdg ${isPos?'bd':c.re==='Negativo'?'bt':'bw'}">${c.re||'Pendiente'}</span></div>
+    <div class="tl-body">
+      ${c.ft?`<div style="font-size:10px;color:var(--txt3)">Toma: ${fmt(c.ft)}${c.fr?' · Resultado: '+fmt(c.fr):''}</div>`:''}
+      ${c.ge?`<div style="font-weight:600;margin-top:2px">${c.ge}</div>`:''}
+      ${c.se?`<div style="color:var(--ok);font-size:10px">✓ S: ${c.se.slice(0,50)}</div>`:''}
+      ${c.rs?`<div style="color:var(--danger);font-size:10px">✗ R: ${c.rs.slice(0,50)}</div>`:''}
+    </div>
+    <span class="tl-expand" onclick="toggleDetail('${uid}')">▼ Ver detalle</span>
+    <div class="tl-detail" id="${uid}">
+      ${c.se?`<div><b>Sensible a:</b> ${c.se}</div>`:''}
+      ${c.rs?`<div style="margin-top:4px"><b>Resistente a:</b> ${c.rs}</div>`:''}
+      ${c.co?`<div style="margin-top:4px;font-style:italic">${c.co}</div>`:''}
+      <div class="tl-actions">
+        <button class="btn btn-sm btn-o" onclick="editCul(${idx},'${patId}')">✏ Editar</button>
+        <button class="btn btn-sm btn-d" onclick="delCul(${idx},'${patId}')">🗑</button>
+      </div>
+    </div>
+  </div>`;
+}
+function toggleDetail(uid){
+  const el=document.getElementById(uid);if(!el)return;
+  el.classList.toggle('open');
+  const exp=el.previousElementSibling;
+  if(exp&&exp.classList.contains('tl-expand'))exp.textContent=el.classList.contains('open')?'▲ Cerrar':'▼ Ver detalle';
+}
+
+// ── ALERTAS ──
+function genAlertas(p,segs,labs,cults){
+  const al=[];
+  const cp=cults.filter(c=>c.re==='Positivo');
+  if(cp.length) al.push({t:'d',ti:`🦠 ${cp.length} cultivo(s) positivo(s)`,tx:cp.map(c=>`${c.ti}: ${c.ge||'No especificado'}`).join(' · ')});
+  const cr=labs.flatMap(l=>getCrit(l));
+  if(cr.length) al.push({t:'d',ti:'🚨 Valores críticos',tx:cr.slice(0,4).join(' · ')});
+  const segOrd=[...segs].filter(s=>s.f).sort((a,b)=>b.f.localeCompare(a.f));
+  if(segOrd.length){const diff=(new Date()-new Date(segOrd[0].f))/86400000;if(diff>=3)al.push({t:'w',ti:`⏰ Sin seguimiento hace ${Math.floor(diff)} días`,tx:'Último: '+fmt(segOrd[0].f)})}
+  const ls=segOrd[0];
+  if(ls&&ls.dr&&parseInt(ls.dr)<500)al.push({t:'d',ti:'💧 Oliguria detectada',tx:`Diuresis: ${ls.dr} mL/día`});
+  return al;
+}
+
+// ── LABS CRÍTICOS ──
+const LR={hb:{c:7,label:'Hb'},hto:{c:21,label:'Hto'},leuco:{c:1,label:'Leucocitos'},plaq:{c:20,label:'Plaquetas'},creat:{c:0,max:6,label:'Creatinina'},na:{c:120,max:160,label:'Sodio'},k:{c:2,max:6.5,label:'Potasio'},inr:{c:0,max:4,label:'INR'},glucosa:{c:50,max:450,label:'Glucosa'}};
+function getCrit(lab){
+  return Object.entries({hb:'hb',hto:'hto',leuco:'le',plaq:'pl',creat:'cr',na:'na',k:'k',inr:'in',glucosa:'gl'}).filter(([rk,lk])=>{const vv=parseFloat(lab[lk]);const r=LR[rk];return !isNaN(vv)&&r&&(vv<=r.c||(r.max&&vv>=r.max))}).map(([rk])=>`${LR[rk].label}: ${lab[{hb:'hb',hto:'hto',leuco:'le',plaq:'pl',creat:'cr',na:'na',k:'k',inr:'in',glucosa:'gl'}[rk]]}`);
+}
+function evalLab(rk,val){const vv=parseFloat(val);const r=LR[rk];if(isNaN(vv)||!r)return 'normal';return(vv<=r.c||(r.max&&vv>=r.max))?'critical':'normal'}
+
+// ── RESUMEN ──
+function tabRes(p,segs,labs,cults,dias){
+  const segOrd=[...segs].filter(s=>s.f).sort((a,b)=>b.f.localeCompare(a.f));
+  const labOrd=[...labs].filter(l=>l.f).sort((a,b)=>b.f.localeCompare(a.f));
+  const us=segOrd[0],ul=labOrd[0];
+  const rams=segs.filter(s=>s.ra).length,prms=segs.filter(s=>s.pc).length;
+  return`<div class="stats">
+    <div class="sb"><div class="sn">${dias}</div><div class="sl">Días internado</div></div>
+    <div class="sb"><div class="sn">${segs.length}</div><div class="sl">Seguimientos</div></div>
+    <div class="sb"><div class="sn">${labs.length}</div><div class="sl">Labs</div></div>
+    <div class="sb"><div class="sn">${cults.length}</div><div class="sl">Cultivos</div></div>
+    <div class="sb"><div class="sn" style="color:var(--warn)">${rams}</div><div class="sl">RAMs</div></div>
+    <div class="sb"><div class="sn" style="color:var(--info)">${prms}</div><div class="sl">PRMs</div></div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="ct">🏥 Diagnósticos</div><div style="font-size:12px;white-space:pre-line;color:var(--txt2)">${p.d||'No registrado'}</div></div>
+    <div class="card"><div class="ct">💊 Tratamiento actual</div><div style="font-size:12px;white-space:pre-line;color:var(--txt2)">${p.tr||'No registrado'}</div></div>
+  </div>
+  ${us?`<div class="card"><div class="ct">📋 Último seguimiento — ${fmt(us.f)}</div><div style="font-size:12px;white-space:pre-line;color:var(--txt2)">${us.ev||'-'}</div>${us.ac?`<div style="margin-top:7px;font-size:11px;background:#f0f9fb;border-radius:5px;padding:6px;color:var(--teal)">✅ ${us.ac}</div>`:''}</div>`:''}
+  ${ul?labCardMini(ul):''}
+  ${p.o?`<div class="card"><div class="ct">📝 Observaciones</div><div style="font-size:12px;white-space:pre-line;color:var(--txt2)">${p.o}</div></div>`:''}`;
+}
+function labCardMini(lab){
+  const campos=[{k:'hb',l:'Hb',u:'g/dL',r:'hb'},{k:'cr',l:'Creatinina',u:'mg/dL',r:'creat'},{k:'k',l:'Potasio',u:'mEq/L',r:'k'},{k:'na',l:'Sodio',u:'mEq/L',r:'na'},{k:'pl',l:'Plaquetas',u:'x10³',r:'plaq'},{k:'le',l:'Leucocitos',u:'x10³',r:'leuco'},{k:'in',l:'INR',u:'',r:'inr'},{k:'tp',l:'TP',u:'seg',r:''},{k:'pc',l:'PCR',u:'mg/L',r:''},{k:'gl',l:'Glucosa',u:'mg/dL',r:'glucosa'},{k:'fg',l:'FGe',u:'mL/min',r:''},{k:'to',l:'TGO',u:'U/L',r:''}].filter(c=>lab[c.k]);
+  if(!campos.length)return'';
+  return`<div class="card"><div class="ct">🧪 Últimos labs — ${fmt(lab.f)}</div><div class="lab-grid">${campos.map(c=>{const st=evalLab(c.r,lab[c.k]);return`<div class="li ${st}"><div class="ln">${c.l}</div><div class="lv ${st}">${lab[c.k]} <span style="font-size:10px;font-weight:400">${c.u}</span></div>${st==='critical'?`<span class="lf lf-c">🚨 CRÍTICO</span>`:''}</div>`}).join('')}</div>${lab.ot?`<div style="margin-top:7px;font-size:11px;color:var(--txt2)"><b>Otros/Estudios:</b> ${lab.ot}</div>`:''}</div>`;
+}
+
+// ── TABLA SEGUIMIENTOS ──
+function tabSeg(segs,id){
+  if(!segs.length)return`<div class="card"><div style="text-align:center;color:var(--txt3);padding:16px">Sin seguimientos.<br><br><button class="btn btn-p" onclick="abrirSeg()">+ Agregar</button></div></div>`;
+  const ord=[...segs].map((s,i)=>({...s,_i:i})).sort((a,b)=>b.f.localeCompare(a.f));
+  return`<div class="card"><div class="ct">Historial <button class="btn btn-sm btn-p" onclick="abrirSeg()">+ Nuevo</button></div>
+  <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Fecha</th><th>Turno</th><th>Evolución</th><th>RAM</th><th>PRM</th><th>Intervención</th><th>Acciones</th></tr></thead><tbody>
+  ${ord.map(s=>`<tr><td><b>${fmt(s.f)}</b></td><td>${s.tu||'-'}</td><td style="max-width:180px">${(s.ev||'-').slice(0,70)}${(s.ev||'').length>70?'...':''}</td><td>${s.ra?`<span class="bdg bw">${s.rg||'RAM'}</span>`:'-'}</td><td>${s.pc?`<span class="bdg bi">${s.pc}</span>`:'-'}</td><td style="max-width:130px">${(s.ac||'-').slice(0,45)}${(s.ac||'').length>45?'...':''}</td><td style="white-space:nowrap"><button class="btn btn-sm btn-o" onclick="editSeg(${s._i},'${id}')">✏</button> <button class="btn btn-sm btn-d" onclick="delSeg(${s._i},'${id}')">🗑</button></td></tr>`).join('')}
+  </tbody></table></div></div>`;
+}
+
+// ── PRM ──
+const PRMT={Necesidad:['PRM 1 – Problema de salud no tratado','PRM 2 – Medicamento innecesario'],Efectividad:['PRM 3 – Inefectividad no cuantitativa','PRM 4 – Inefectividad cuantitativa (dosis baja)'],Seguridad:['PRM 5 – Inseguridad no cuantitativa (RAM)','PRM 6 – Inseguridad cuantitativa (dosis alta)']};
+function updPRM(){const cat=v('sPc'),sel=document.getElementById('sPt');sel.innerHTML=cat?PRMT[cat].map(t=>`<option>${t}</option>`).join(''):'<option value="">--</option>'}
+
+// ── MODALES ──
+const abrir=id=>document.getElementById(id).classList.add('open');
+const cerrar=id=>document.getElementById(id).classList.remove('open');
+
+function abrirNuevoPac(){editPid=null;document.getElementById('mPacT').textContent='Nuevo Paciente';['pN','pH','pE','pS','pPe','pT','pSv','pC','pG','pD','pTr','pO'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});document.getElementById('pFi').value=today();abrir('mPac')}
+function editPac(id){const p=gP().find(x=>x.id===id);if(!p)return;editPid=id;document.getElementById('mPacT').textContent='Editar Paciente';const m={pN:'n',pH:'h',pE:'e',pS:'s',pPe:'pe',pT:'ta',pSv:'sv',pC:'ca',pG:'g',pFi:'fi',pD:'d',pTr:'tr',pO:'o'};Object.entries(m).forEach(([eid,pk])=>{const e=document.getElementById(eid);if(e)e.value=p[pk]||''});abrir('mPac')}
+function guardarPac(){const n=v('pN');if(!n){toast('Ingresa el nombre');return}const pats=gP();const data={n,h:v('pH'),e:v('pE'),s:v('pS'),pe:v('pPe'),ta:v('pT'),sv:v('pSv'),ca:v('pC'),g:v('pG'),fi:v('pFi'),d:v('pD'),tr:v('pTr'),o:v('pO')};if(editPid){const i=pats.findIndex(x=>x.id===editPid);if(i>=0)pats[i]={...pats[i],...data}}else{data.id='p_'+Date.now();pats.push(data);pid=data.id}sP(pats);cerrar('mPac');renderSidebar('');if(pid)renderMain(pid);toast('✅ Paciente guardado')}
+function delPac(id){if(!confirm('¿Eliminar paciente y todos sus datos?'))return;sP(gP().filter(p=>p.id!==id));[KS,KL,KC,KK].forEach(k=>localStorage.removeItem(k(id)));pid=null;renderSidebar('');document.getElementById('mainContent').innerHTML='<div class="empty"><div class="empty-t">Paciente eliminado</div></div>';toast('Eliminado')}
+
+function abrirSeg(){editSi=null;document.getElementById('mSegT').textContent='Nuevo Seguimiento';['sEv','sTr','sPA','sFC','sFR','sTe','sSp','sGl','sFo','sRA','sRF','sPd','sIm','sId','sAc','sPe2'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});['sTu','sDi','sRG','sNa','sNo','sPc','sPt','sIs','sRe'].forEach(id=>{const e=document.getElementById(id);if(e)e.selectedIndex=0});['sDr','sCa','sIn','sEg'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});document.getElementById('sF').value='';abrir('mSeg')}
+function editSeg(idx,id){editSi=idx;const s=gS(id)[idx];if(!s)return;document.getElementById('mSegT').textContent='✏ Editar — '+fmt(s.f);const m={sF:'f',sTu:'tu',sEv:'ev',sTr:'tr2',sPA:'pa',sFC:'fc',sFR:'fr',sTe:'te',sSp:'sp',sGl:'gl2',sDi:'di',sFo:'fo',sDr:'dr',sCa:'ca2',sIn:'in',sEg:'eg',sRA:'ra',sRF:'rf',sRG:'rg',sNa:'na2',sNo:'no',sPc:'pc',sPd:'pd',sIm:'im',sIs:'is2',sId:'id2',sAc:'ac',sRe:'re2',sPe2:'pe2'};Object.entries(m).forEach(([eid,sk])=>{const e=document.getElementById(eid);if(e)e.value=s[sk]||''});document.getElementById('sPt').value=s.pt||'';abrir('mSeg')}
+function guardarSeg(){if(!pid){toast('Selecciona un paciente');return}const f=v('sF');if(!f){toast('⚠ Ingresa la fecha');return}const segs=gS(pid);const data={f,tu:v('sTu'),ev:v('sEv'),tr2:v('sTr'),pa:v('sPA'),fc:v('sFC'),fr:v('sFR'),te:v('sTe'),sp:v('sSp'),gl2:v('sGl'),di:v('sDi'),fo:v('sFo'),dr:v('sDr'),ca2:v('sCa'),in:v('sIn'),eg:v('sEg'),ra:v('sRA'),rf:v('sRF'),rg:v('sRG'),na2:v('sNa'),no:v('sNo'),pc:v('sPc'),pt:v('sPt'),pd:v('sPd'),im:v('sIm'),is2:v('sIs'),id2:v('sId'),ac:v('sAc'),re2:v('sRe'),pe2:v('sPe2'),ts:Date.now()};if(editSi!==null)segs[editSi]=data;else segs.push(data);ssS(pid,segs);cerrar('mSeg');renderMain(pid);renderSidebar('');toast('✅ Seguimiento — '+fmt(f))}
+function delSeg(idx,id){if(!confirm('¿Eliminar?'))return;const s=gS(id);s.splice(idx,1);ssS(id,s);renderMain(id);toast('Eliminado')}
+
+function abrirLab(){if(!pid){toast('Selecciona un paciente');return}editLi=null;document.getElementById('mLabT').textContent='Laboratorios';['lHb','lHt','lLe','lNe','lLi','lPl','lCr','lBu','lUr','lFg','lAu','lTo','lTp','lFa','lGt','lBt','lBd','lAl','lPr','lTP','lIN','lTT','lNa','lK','lCl','lCa2','lMg','lPh','lGl','lHa','lPC','lPc2','lFe','lDh','lOt','lOb'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});document.getElementById('lF').value='';abrir('mLab')}
+function editLab(idx,id){editLi=idx;const l=gL(id)[idx];if(!l)return;document.getElementById('mLabT').textContent='✏ Editar Labs — '+fmt(l.f);const m={lF:'f',lTi:'ti',lHb:'hb',lHt:'ht',lLe:'le',lNe:'ne',lLi:'li',lPl:'pl',lCr:'cr',lBu:'bu',lUr:'ur',lFg:'fg',lAu:'au',lTo:'to',lTp:'tp2',lFa:'fa',lGt:'gt',lBt:'bt',lBd:'bd',lAl:'al',lPr:'pr',lTP:'tp',lIN:'in',lTT:'tt',lNa:'na',lK:'k',lCl:'cl',lCa2:'ca',lMg:'mg',lPh:'ph',lGl:'gl',lHa:'ha',lPC:'pc',lPc2:'pc2',lFe:'fe',lDh:'dh',lOt:'ot',lOb:'ob'};Object.entries(m).forEach(([eid,lk])=>{const e=document.getElementById(eid);if(e)e.value=l[lk]||''});abrir('mLab')}
+function guardarLab(){if(!pid)return;const f=v('lF');if(!f){toast('⚠ Ingresa la fecha');return}const data={f,ti:v('lTi'),hb:v('lHb'),ht:v('lHt'),le:v('lLe'),ne:v('lNe'),li:v('lLi'),pl:v('lPl'),cr:v('lCr'),bu:v('lBu'),ur:v('lUr'),fg:v('lFg'),au:v('lAu'),to:v('lTo'),tp2:v('lTp'),fa:v('lFa'),gt:v('lGt'),bt:v('lBt'),bd:v('lBd'),al:v('lAl'),pr:v('lPr'),tp:v('lTP'),in:v('lIN'),tt:v('lTT'),na:v('lNa'),k:v('lK'),cl:v('lCl'),ca:v('lCa2'),mg:v('lMg'),ph:v('lPh'),gl:v('lGl'),ha:v('lHa'),pc:v('lPC'),pc2:v('lPc2'),fe:v('lFe'),dh:v('lDh'),ot:v('lOt'),ob:v('lOb'),ts:Date.now()};const labs=gL(pid);if(editLi!==null)labs[editLi]=data;else labs.push(data);sL(pid,labs);cerrar('mLab');renderMain(pid);renderSidebar('');toast('✅ Labs — '+fmt(f))}
+function delLab(idx,id){if(!confirm('¿Eliminar?'))return;const l=gL(id);l.splice(idx,1);sL(id,l);renderMain(id);toast('Eliminado')}
+
+function abrirCul(){if(!pid){toast('Selecciona un paciente');return}editCi=null;document.getElementById('mCulT').textContent='Cultivo / Antibiograma';['cGe','cUF','cSe','cRs','cCo'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});['cTi','cRe'].forEach(id=>{const e=document.getElementById(id);if(e)e.selectedIndex=0});document.getElementById('cFt').value='';document.getElementById('cFr').value='';abrir('mCul')}
+function editCul(idx,id){editCi=idx;const c=gC(id)[idx];if(!c)return;document.getElementById('mCulT').textContent='✏ Editar Cultivo — '+fmt(c.ft);const m={cFt:'ft',cFr:'fr',cTi:'ti',cRe:'re',cGe:'ge',cUF:'uf',cSe:'se',cRs:'rs',cCo:'co'};Object.entries(m).forEach(([eid,ck])=>{const e=document.getElementById(eid);if(e)e.value=c[ck]||''});abrir('mCul')}
+function guardarCul(){if(!pid)return;const f=v('cFt');if(!f){toast('⚠ Ingresa la fecha de toma');return}const data={ft:f,fr:v('cFr'),ti:v('cTi'),re:v('cRe'),ge:v('cGe'),uf:v('cUF'),se:v('cSe'),rs:v('cRs'),co:v('cCo'),ts:Date.now()};const cults=gC(pid);if(editCi!==null)cults[editCi]=data;else cults.push(data);sC(pid,cults);cerrar('mCul');renderMain(pid);renderSidebar('');toast('✅ Cultivo — '+fmt(f))}
+function delCul(idx,id){if(!confirm('¿Eliminar?'))return;const c=gC(id);c.splice(idx,1);sC(id,c);renderMain(id);toast('Eliminado')}
+
+// ── FOTO IA ──
+function abrirFoto(){fFiles=[];fData=null;document.getElementById('fPrev').innerHTML='';document.getElementById('fRes').style.display='none';document.getElementById('fLoad').style.display='none';document.getElementById('fBtnAp').style.display='none';document.getElementById('fBtnA').disabled=true;document.getElementById('fInput').value='';abrir('mFoto')}
+function prevFotos(input){fFiles=Array.from(input.files);const prev=document.getElementById('fPrev');prev.innerHTML='';fFiles.forEach(f=>{const r=new FileReader();r.onload=e=>{const img=document.createElement('img');img.src=e.target.result;img.className='fthumb';prev.appendChild(img)};r.readAsDataURL(f)});document.getElementById('fBtnA').disabled=fFiles.length===0}
+async function analizarFoto(){
+  if(!fFiles.length)return;
+  document.getElementById('fLoad').style.display='block';document.getElementById('fRes').style.display='none';document.getElementById('fBtnA').disabled=true;
+  const tipo=v('fTi');const p=pid?gP().find(x=>x.id===pid):null;
+  const imgs=await Promise.all(fFiles.map(f=>toB64(f)));
+  const sys=`Eres farmacéutica clínica experta. Analiza el documento y extrae todos los datos. Devuelve SOLO JSON sin backticks ni markdown:
+{"tipo":"indicaciones|laboratorio|cultivo|evolucion","fecha":"YYYY-MM-DD","ev":"","tr":"medicamentos línea por línea formato: Nombre — dosis — vía — frecuencia","pa":"","fc":"","fr":"","te":"","sp":"","di":"","fo":"","dr":"","ra":"","rf":"","ac":"","hb":"","ht":"","le":"","ne":"","li":"","pl":"","cr":"","bu":"","ur":"","fg":"","to":"","tp2":"","fa":"","gt":"","bt":"","bd":"","al":"","pr":"","tp":"","in":"","tt":"","na":"","k":"","cl":"","ca":"","mg":"","ph":"","gl":"","ha":"","pc":"","pc2":"","fe":"","dh":"","ot":"otros labs y estudios solicitados","cultTi":"","cultRe":"Positivo|Negativo|Pendiente","cultGe":"","cultSe":"","cultRs":"","cultCo":"","resumen":"resumen completo"}`;
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getApiKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-opus-4-5',max_tokens:2000,system:sys,messages:[{role:'user',content:[...imgs,{type:'text',text:`Tipo: ${tipo}. ${p?'Paciente: '+p.n:''}. Extrae todo incluyendo fecha del documento.`}]})})});
+    const d=await resp.json();
+    if(!d.content){toast('Error API');document.getElementById('fLoad').style.display='none';document.getElementById('fBtnA').disabled=false;return}
+    let raw=d.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim();
+    const s=raw.indexOf('{'),e=raw.lastIndexOf('}');if(s!==-1&&e!==-1)raw=raw.slice(s,e+1);
+    fData=JSON.parse(raw);
+    document.getElementById('fResTxt').textContent=fData.resumen||JSON.stringify(fData,null,2);
+    document.getElementById('fRes').style.display='block';document.getElementById('fBtnAp').style.display='inline-flex';
+  }catch(err){toast('⚠ Error: '+err.message)}
+  document.getElementById('fLoad').style.display='none';document.getElementById('fBtnA').disabled=false;
+}
+function aplicarFoto(){
+  if(!fData)return;const r=fData;abrirSeg();
+  const set=(id,val)=>{if(val){const e=document.getElementById(id);if(e)e.value=val}};
+  if(r.fecha)set('sF',r.fecha);
+  set('sEv',r.ev);set('sTr',r.tr);set('sPA',r.pa);set('sFC',r.fc);set('sFR',r.fr);set('sTe',r.te);set('sSp',r.sp);set('sRA',r.ra);set('sRF',r.rf);set('sAc',r.ac);set('sFo',r.fo);
+  if(r.dr){const e=document.getElementById('sDr');if(e)e.value=r.dr.replace(/[^\d]/g,'')}
+  if(r.di){const dm={'oral':'Oral','parenteral':'Parenteral','enteral':'Enteral (sonda)','npo':'NPO (ayuno)'};const e=document.getElementById('sDi');if(e)e.value=dm[r.di.toLowerCase()]||r.di}
+  const labMap={hb:'lHb',ht:'lHt',le:'lLe',ne:'lNe',li:'lLi',pl:'lPl',cr:'lCr',bu:'lBu',ur:'lUr',fg:'lFg',to:'lTo',tp2:'lTp',fa:'lFa',gt:'lGt',bt:'lBt',bd:'lBd',al:'lAl',pr:'lPr',tp:'lTP',in:'lIN',tt:'lTT',na:'lNa',k:'lK',cl:'lCl',ca:'lCa2',mg:'lMg',ph:'lPh',gl:'lGl',ha:'lHa',pc:'lPC',pc2:'lPc2',fe:'lFe',dh:'lDh',ot:'lOt'};
+  const hasLabs=Object.keys(labMap).some(k=>r[k]);
+  if(hasLabs){setTimeout(()=>{abrirLab();if(r.fecha){const e=document.getElementById('lF');if(e)e.value=r.fecha}Object.entries(labMap).forEach(([rk,eid])=>{if(r[rk]){const e=document.getElementById(eid);if(e)e.value=r[rk]}});toast('🧪 Labs cargados — verifica fecha')},400)}
+  if(r.cultTi||r.cultGe){setTimeout(()=>{abrirCul();if(r.fecha){const e=document.getElementById('cFt');if(e)e.value=r.fecha}const set2=(id,val)=>{if(val){const e=document.getElementById(id);if(e)e.value=val}};set2('cTi',r.cultTi);set2('cRe',r.cultRe);set2('cGe',r.cultGe);set2('cSe',r.cultSe);set2('cRs',r.cultRs);set2('cCo',r.cultCo);toast('🦠 Cultivo cargado')},hasLabs?800:400)}
+  cerrar('mFoto');toast('✅ Datos aplicados — verifica fechas');
+}
+async function toB64(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=e=>res({type:'image',source:{type:'base64',media_type:f.type,data:e.target.result.split(',')[1]}});r.onerror=rej;r.readAsDataURL(f)})}
+
+// ── EXPORTAR ──
+function exportCSV(){const pats=gP();if(!pats.length){toast('Sin datos');return}let csv='Paciente,HC,Servicio,Grupo,Fecha,Turno,Evolución,RAM,PRM,Intervención\n';pats.forEach(p=>{gS(p.id).forEach(s=>{csv+=`"${p.n}","${p.h||''}","${p.sv||''}","${p.g||''}","${s.f||''}","${s.tu||''}","${(s.ev||'').replace(/"/g,"'")}","${s.ra||''}","${s.pc||''}","${(s.ac||'').replace(/"/g,"'")}"\n`})});const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='FarmacoVig_'+today()+'.csv';a.click();toast('✅ CSV exportado')}
+function getApiKey(){let k=localStorage.getItem('fv_apikey');if(!k){k=prompt('Ingresa tu API key de Anthropic (sk-ant-...):');if(k)localStorage.setItem('fv_apikey',k)}return k||''}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200)}
+</script>
+</body>
+</html>
