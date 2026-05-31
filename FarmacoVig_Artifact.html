@@ -763,7 +763,7 @@ async function analizarFoto(){
 {"tipo":"indicaciones|laboratorio|cultivo|evolucion","ev":"texto evolución o nota","tr":"medicamentos uno por línea","pa":"","fc":"","fr":"","te":"","sp":"","di":"oral|parenteral|enteral|NPO","fo":"fórmula nutricional","dr":"diuresis en mL número solo","ra":"descripción RAM","rf":"fármaco RAM","ac":"intervención recomendada","hb":"","ht":"","le":"","ne":"","li":"","pl":"","cr":"","bu":"","ur":"","fg":"","to":"","tp2":"","fa":"","gt":"","bt":"","bd":"","al":"","pr":"","tp":"","in":"","tt":"","na":"","k":"","cl":"","ca":"","mg":"","ph":"","gl":"","ha":"","pc":"","pc2":"","fe":"","dh":"","ot":"otros labs texto","cultTi":"tipo muestra","cultRe":"Positivo|Negativo|Pendiente","cultGe":"microorganismo","cultSe":"sensible a","cultRs":"resistente a","cultCo":"comentario","resumen":"texto formateado con todos los datos extraídos"}`;
   try{
     const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
+      method:'POST',headers:{'Content-Type':'application/json','x-api-key':'sk-ant-api03-blRfq8m2w1Wsg8v23YJltUkRE2gwAEvd9vg2p-sJGMNpicLhErqRHP49fcP9zstoCG2
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,system:sys,
         messages:[{role:'user',content:[...imgs,{type:'text',text:`Documento tipo: ${tipo}. ${p?'Paciente: '+p.n+', grupo: '+(p.g||''):''}. Extrae todos los datos visibles.`}]}]})
     });
